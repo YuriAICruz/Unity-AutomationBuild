@@ -1,0 +1,11 @@
+{
+    "displayName": "Jenkins Automation", 
+    "name": "graphene.automation", 
+    "author": {
+        "url": "https://github.com/YuriAICruz/", 
+        "name": "Graphene AI"
+    }, 
+    "unity": "2018.3",
+    "version": "0.1.0",
+    "description": ". . ."
+}
