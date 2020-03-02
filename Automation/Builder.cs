@@ -89,13 +89,13 @@ public class Builder : MonoBehaviour
     [MenuItem("Automation/Oculus/Go/Build Store")]
     public static void PerformBuildOculusGoStore()
     {
-        BuildAndroid("Oculus", "_dev");
+        BuildAndroid("Oculus", "", true);
     }
 
     [MenuItem("Automation/Oculus/Go/Build")]
     public static void PerformBuildOculusGo()
     {
-        BuildAndroid("Oculus", "", true);
+        BuildAndroid("Oculus", "_dev");
     }
 
     [MenuItem("Automation/Oculus/Quest/Build")]
