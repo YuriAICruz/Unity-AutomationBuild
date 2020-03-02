@@ -45,18 +45,32 @@ public class Builder : MonoBehaviour
         _scenes = EditorBuildSettings.scenes.Select(x => x.path).ToArray();
     }
 
-
-    [MenuItem("Automation/Android/Build")]
-    public static void PerformBuildAndroid()
+    private static void BuildAndroid(string folder, string appendEndFile = "", bool oculusStore = false)
     {
-        CheckFolders("Android");
+        CheckFolders(folder);
+
         try
         {
             BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
             buildPlayerOptions.scenes = _scenes;
-            buildPlayerOptions.locationPathName = _buildDir + "Android/" + Application.productName + ".apk";
+            buildPlayerOptions.locationPathName = _buildDir + folder + "/" + Application.productName + appendEndFile + ".apk";
             buildPlayerOptions.target = BuildTarget.Android;
             buildPlayerOptions.options = BuildOptions.None;
+
+            var filePath = "Assets/Plugins/Android/AndroidManifest.xml";
+            if (oculusStore)
+            {
+                if (File.Exists(filePath))
+                    File.Delete(filePath);
+                File.Copy("Assets/Plugins/Android/AndroidManifest_OculusStore.xml", filePath);
+            }
+            else
+            {
+                if (File.Exists(filePath))
+                    File.Delete(filePath);
+            }
+
+
             BuildPipeline.BuildPlayer(buildPlayerOptions);
         }
         catch (Exception e)
@@ -66,26 +80,28 @@ public class Builder : MonoBehaviour
         }
     }
 
+
+    [MenuItem("Automation/Android/Build")]
+    public static void PerformBuildAndroid()
+    {
+        BuildAndroid("Android");
+    }
+    [MenuItem("Automation/Oculus/Go/Build Store")]
+    public static void PerformBuildOculusGoStore()
+    {
+        BuildAndroid("Oculus", "_dev");
+    }
+
+    [MenuItem("Automation/Oculus/Go/Build")]
+    public static void PerformBuildOculusGo()
+    {
+        BuildAndroid("Oculus", "", true);
+    }
+
     [MenuItem("Automation/Oculus/Quest/Build")]
     public static void PerformBuildOculusQuest()
     {
-        CheckFolders("Oculus");
-        GetCommandLine("fake");
-
-        try
-        {
-            BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
-            buildPlayerOptions.scenes = _scenes;
-            buildPlayerOptions.locationPathName = _buildDir + "Oculus/" + Application.productName + ".apk";
-            buildPlayerOptions.target = BuildTarget.Android;
-            buildPlayerOptions.options = BuildOptions.None;
-            BuildPipeline.BuildPlayer(buildPlayerOptions);
-        }
-        catch (Exception e)
-        {
-            Debug.LogWarning(e);
-            throw;
-        }
+        BuildAndroid("Oculus");
     }
 
     [MenuItem("Automation/iOS/Build")]
